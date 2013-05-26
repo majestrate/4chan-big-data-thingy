@@ -4,7 +4,7 @@
 
 ## What ? ##
 
-The 4chan Big dAta Thingy (4BAT) is a distributed analysis engine for 4chan using the (4chan json api)[https://github.com/4chan/4chan-API]
+The 4chan Big dAta Thingy (4BAT) is a distributed analysis engine for 4chan using the [4chan json api](https://github.com/4chan/4chan-API)
 
 ## Why ? ##
 
