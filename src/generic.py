@@ -1,65 +1,8 @@
-from sqlalchemy import create_engine, MetaData
 from bs4 import BeautifulSoup as BS
 import requests
 import util
 import threading, time, json, datetime, sys
 
-
-class generic_db:
-    """
-    generic database object
-    """
-    def __init__(self):
-        """
-        initialize database and construct
-        url tells sqlalchemy how to connect to the database
-        """
-        self._conn = None
-        self.tables = dict()
-
-    def err(self):
-        self.stop()
-        util.err()
-
-    def open(self):
-        """
-        open database connection
-        """
-        self.close()
-        self._conn = self.connect()
-
-    def connect(self):
-        """
-        return some kind of connection
-        must have attributes: close()
-        """
-        raise NotImplemented()
-
-    def close(self):
-        """
-        close database connection
-        """
-        if self._conn is not None:
-            self._conn.close()
-            self._conn = None
-
-    def db_exec(self,table,func):
-        """
-        execute database action on table
-        func is given 1 parameter, an open connection
-        """
-        # open database
-        self.open()
-        try:
-            # grab table
-            if table is not None and table in self.tables:
-                table = self.tables[table]
-            # execute function
-            func(self._conn,table)
-        except:
-            self.err()
-        # close database
-        self.close()
 
 class generic_jobqueue:
     """
@@ -116,7 +59,7 @@ class generic_jobqueue:
                     except:
                         self.err()
                 # no jobs
-                else:
+                else: 
                     # update state and add more jobs
                     self.update()
                 self.sleep()
@@ -175,22 +118,3 @@ class generic_scraper(generic_jobqueue):
         except:
             return None
     
-
-class sql_db(generic_db):
-
-    def __init__(self,url):
-        generic_db.__init__(self)
-        # create engine
-        self._eng = create_engine(url)
-        # generate and create tables
-        meta = MetaData()
-        self.tables = self.gen_tables(meta)
-        meta.create_all(self._eng)
-        self.connect = self._eng.connect
-
-    def gen_tables(self,meta):
-        """
-        generate database tables
-        return dict mapping table name to tables
-        """
-        raise NotImplemented()
